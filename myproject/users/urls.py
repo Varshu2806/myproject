@@ -1,6 +1,14 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.urls import path
+from .views import (
+    RegisterView,
+    LoginView,
+    UserProfileView,
+    UserListView,
+    SendOTPView,
+)
+
 @api_view(['GET'])
 def api_root(request):
     return Response({
@@ -11,13 +19,6 @@ def api_root(request):
         "users": "/api/users/"
     })
 
-from .views import (
-    RegisterView,
-    LoginView,
-    UserProfileView,
-    UserListView,
-    SendOTPView,
-)
 urlpatterns = [
     path('', api_root, name='api-root'),
     path('register/', RegisterView.as_view(), name='register'),
