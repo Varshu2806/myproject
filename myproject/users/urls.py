@@ -18,8 +18,6 @@ from .views import (
     UserListView,
     SendOTPView,
 )
-from rest_framework_simplejwt.views import TokenRefreshView
-
 urlpatterns = [
     path('', api_root, name='api-root'),
     path('register/', RegisterView.as_view(), name='register'),
