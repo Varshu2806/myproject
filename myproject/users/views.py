@@ -19,23 +19,27 @@ def generate_otp(phone_number):
     print(f"Generated OTP for {phone_number}: {otp}")
     return otp
 
+
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        phone_number = request.data.get("profile", {}).get("phone_number")
+        try:
+            serializer.is_valid(raise_exception=True)
+            user = serializer.save()
+            profile_data = request.data.get("profile", {})
+            phone_number = profile_data.get("phone_number")
 
-        otp = generate_otp(phone_number) if phone_number else None
+            otp = generate_otp(phone_number) if phone_number else None
 
-        return Response({
-            "message": "User registered successfully.",
-            "email": user.email,
-            "otp": otp
-        }, status=status.HTTP_201_CREATED)
-
+            return Response({
+                "message": "User registered successfully.",
+                "email": user.email,
+                "otp": otp
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
